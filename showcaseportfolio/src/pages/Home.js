@@ -12,7 +12,7 @@ export default function Home() {
           <h1>Welcome</h1>
           <p>Welcome to my showcase portfolio!</p>
           <p>
-            On the other pages you’ll find information about me, experience,
+            On the other pages you'll find information about me, experience,
             and ways to get in contact with me.
           </p>
         </div>
