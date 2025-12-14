@@ -10,7 +10,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding-top: 100px; /* prevent header overlap */
+  padding-top: 100px;
 }
 
 .content-box {
