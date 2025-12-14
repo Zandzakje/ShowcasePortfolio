@@ -24,6 +24,9 @@ jobs:
         with:
           node-version: 18
 
+      - name: Generate "missing" package.json
+        run: npm init
+
       - name: Install dependencies
         run: npm ci
 
