@@ -25,7 +25,7 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
-        working-directory: ./package
+        working-directory: package
         run: npm ci
 
       - name: Build
