@@ -24,10 +24,8 @@ jobs:
         with:
           node-version: 18
 
-      - name: Generate "missing" package.json
-        run: npm init
-
       - name: Install dependencies
+        working-directory: ../../showcaseportfolio/package
         run: npm ci
 
       - name: Build
