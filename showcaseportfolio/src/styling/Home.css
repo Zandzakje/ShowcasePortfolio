@@ -1,0 +1,22 @@
+body {
+  background: url("../assets/TestBg.jpg") no-repeat center/cover fixed;
+  margin: 0;
+  font-family: sans-serif;
+  color: white;
+}
+
+.content-wrapper {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 100px; /* prevent header overlap */
+}
+
+.content-box {
+  background: rgba(84, 54, 148, 0.45);
+  padding: 30px 40px;
+  text-align: center;
+  border-radius: 14px;
+  max-width: 450px;
+}
