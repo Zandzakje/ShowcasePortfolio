@@ -29,6 +29,7 @@ jobs:
         run: npm ci
 
       - name: Build
+        working-directory: showcaseportfolio
         run: npm run build
 
       - name: Upload artifact
