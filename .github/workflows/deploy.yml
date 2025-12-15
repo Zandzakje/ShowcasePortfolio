@@ -25,7 +25,7 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
-        working-directory: package.json
+        working-directory: showcaseportfolio
         run: npm ci
 
       - name: Build
