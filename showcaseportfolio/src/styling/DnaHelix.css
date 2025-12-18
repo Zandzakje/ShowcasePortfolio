@@ -28,12 +28,12 @@
 /* DNA Configuration - Edit these values! */
 :root {
   /* Colors */
-  --dna-backbone-a: #33aaff;
-  --dna-backbone-b: #ff5555;
-  --dna-rung: #cccccc;
+  --dna-backbone-a: #33ff33;
+  --dna-backbone-b: #ff2b2b;
+  --dna-rung: #ebebeb;
   
   /* Lighting (higher = brighter) */
-  --dna-ambient-light: 0.5;
+  --dna-ambient-light: 0.75;
   --dna-point-light: 1.5;
   
   /* Header mask height - adjust to match your header */

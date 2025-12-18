@@ -16,6 +16,9 @@ export default function DnaHelix({ scrollRef }) {
     lastScrollY.current = window.scrollY;
     rotationVelocity.current = 0;
     
+    // Capture container ref for cleanup
+    const container = containerRef.current;
+    
     // --- Scene setup ---
     const scene = new THREE.Scene();
     scene.background = null;
@@ -46,9 +49,9 @@ export default function DnaHelix({ scrollRef }) {
     renderer.setPixelRatio(window.devicePixelRatio);
 
     // Clear any existing canvas before appending
-    if (containerRef.current) {
-      containerRef.current.innerHTML = '';
-      containerRef.current.appendChild(renderer.domElement);
+    if (container) {
+      container.innerHTML = '';
+      container.appendChild(renderer.domElement);
     }
 
     const canvas = renderer.domElement;
@@ -129,7 +132,7 @@ export default function DnaHelix({ scrollRef }) {
       const distance = Math.hypot(x2 - x1, z2 - z1);
 
       const rung = new THREE.Mesh(
-        new THREE.CylinderGeometry(0.05, 0.05, distance, 8),
+        new THREE.CylinderGeometry(0.08, 0.08, distance, 8),
         new THREE.MeshStandardMaterial({ color: DNA_COLORS.rung })
       );
 
@@ -144,6 +147,7 @@ export default function DnaHelix({ scrollRef }) {
     scene.add(dnaGroup);
 
     // --- Lighting ---
+    // Get lighting values from CSS
     const ambientIntensity = parseFloat(styles.getPropertyValue('--dna-ambient-light').trim()) || 0.8;
     const pointIntensity = parseFloat(styles.getPropertyValue('--dna-point-light').trim()) || 1.5;
     
@@ -151,6 +155,11 @@ export default function DnaHelix({ scrollRef }) {
     const light = new THREE.PointLight(0xffffff, pointIntensity);
     light.position.set(10, 10, 10);
     scene.add(light);
+    
+    // Additional fill light for better visibility
+    const fillLight = new THREE.PointLight(0xffffff, 0.8);
+    fillLight.position.set(-10, -5, 10);
+    scene.add(fillLight);
 
     // --- Scroll interaction ---
     const onScroll = () => {
@@ -237,8 +246,8 @@ export default function DnaHelix({ scrollRef }) {
       renderer.dispose();
       
       // Clear container
-      if (containerRef.current) {
-        containerRef.current.innerHTML = '';
+      if (container) {
+        container.innerHTML = '';
       }
     };
   }, [scrollRef]);
