@@ -1,0 +1,41 @@
+/* DNA Helix Canvas Container */
+.dna-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 0;
+  
+  /* Mask to hide DNA behind header */
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    transparent var(--dna-mask-height),
+    black var(--dna-mask-height),
+    black 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0%,
+    transparent var(--dna-mask-height),
+    black var(--dna-mask-height),
+    black 100%
+  );
+}
+
+/* DNA Configuration - Edit these values! */
+:root {
+  /* Colors */
+  --dna-backbone-a: #33aaff;
+  --dna-backbone-b: #ff5555;
+  --dna-rung: #cccccc;
+  
+  /* Lighting (higher = brighter) */
+  --dna-ambient-light: 0.5;
+  --dna-point-light: 1.5;
+  
+  /* Header mask height - adjust to match your header */
+  --dna-mask-height: 75px;
+}
