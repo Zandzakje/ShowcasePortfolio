@@ -28,8 +28,13 @@ export default function DnaHelix({ scrollRef }) {
     const DNA_COLORS = {
       backboneA: parseInt(styles.getPropertyValue('--dna-backbone-a').trim().replace('#', '0x')),
       backboneB: parseInt(styles.getPropertyValue('--dna-backbone-b').trim().replace('#', '0x')),
-      rung: parseInt(styles.getPropertyValue('--dna-rung').trim().replace('#', '0x'))
+      rungA: parseInt(styles.getPropertyValue('--dna-rung-a').trim().replace('#', '0x')),
+      rungB: parseInt(styles.getPropertyValue('--dna-rung-b').trim().replace('#', '0x'))
     };
+    
+    // Get density settings from CSS
+    const helixDensity = parseFloat(styles.getPropertyValue('--dna-helix-density').trim()) || 1.0;
+    const rungSpacing = parseInt(styles.getPropertyValue('--dna-rung-spacing').trim()) || 3;
 
     const camera = new THREE.PerspectiveCamera(
       75,
@@ -72,7 +77,7 @@ export default function DnaHelix({ scrollRef }) {
     dnaGroupRef.current = dnaGroup;
 
     const helixRadius = 1;
-    const helixHeight = 20;
+    const helixHeight = 20 * helixDensity; // Adjust height based on density
     const turns = 10;
     const pointsPerTurn = 60;
 
@@ -119,7 +124,8 @@ export default function DnaHelix({ scrollRef }) {
     dnaGroup.add(backbone1, backbone2);
 
     // --- Base pairs ---
-    for (let i = 0; i < turns * pointsPerTurn; i += 3) {
+    let rungColorToggle = false;
+    for (let i = 0; i < turns * pointsPerTurn; i += rungSpacing) {
       const t = i / (turns * pointsPerTurn);
       const angle = t * turns * Math.PI * 2;
       const y = (t - 0.5) * helixHeight;
@@ -131,9 +137,13 @@ export default function DnaHelix({ scrollRef }) {
 
       const distance = Math.hypot(x2 - x1, z2 - z1);
 
+      // Alternate between two colors
+      const rungColor = rungColorToggle ? DNA_COLORS.rungA : DNA_COLORS.rungB;
+      rungColorToggle = !rungColorToggle;
+
       const rung = new THREE.Mesh(
         new THREE.CylinderGeometry(0.08, 0.08, distance, 8),
-        new THREE.MeshStandardMaterial({ color: DNA_COLORS.rung })
+        new THREE.MeshStandardMaterial({ color: rungColor })
       );
 
       rung.position.set((x1 + x2) / 2, y, (z1 + z2) / 2);

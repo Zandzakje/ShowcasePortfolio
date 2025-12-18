@@ -27,15 +27,22 @@
 
 /* DNA Configuration - Edit these values! */
 :root {
-  /* Colors */
-  --dna-backbone-a: #33ff33;
-  --dna-backbone-b: #ff2b2b;
-  --dna-rung: #ebebeb;
+  /* Backbone Colors */
+  --dna-backbone-a: #33aaff;
+  --dna-backbone-b: #ff5555;
+  
+  /* Rung Colors (alternating) */
+  --dna-rung-a: #cccccc;
+  --dna-rung-b: #888888;
   
   /* Lighting (higher = brighter) */
-  --dna-ambient-light: 0.75;
+  --dna-ambient-light: 0.8;
   --dna-point-light: 1.5;
   
   /* Header mask height - adjust to match your header */
   --dna-mask-height: 75px;
+  
+  /* Density Controls */
+  --dna-helix-density: 2;   /* 0.5 = squished, 1.0 = normal, 2.0 = stretched */
+  --dna-rung-spacing: 3.5;      /* Lower = more rungs, higher = fewer rungs (try 2, 3, 4, 5) */
 }
