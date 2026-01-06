@@ -6,7 +6,7 @@ import "../styling/DnaHelix.css";
 const FLOATING_ITEMS = [
   {
     id: 1,
-    image: "https://picsum.photos/400/400?random=1",
+    image: "https://github.com/Zandzakje/ShowcasePortfolio/tree/main/showcaseportfolio/src/assets/DNA_1.png",
     title: "Project Alpha",
     description: "A revolutionary approach to DNA sequencing that combines machine learning with traditional methods."
   },
