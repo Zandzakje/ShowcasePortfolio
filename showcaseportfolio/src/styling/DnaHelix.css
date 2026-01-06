@@ -5,7 +5,7 @@
   left: 0;
   width: 100%;
   height: 100vh;
-  pointer-events: none;
+  pointer-events: auto;
   z-index: 0;
   
   /* Mask to hide DNA behind header */
@@ -43,6 +43,108 @@
   --dna-mask-height: 75px;
   
   /* Density Controls */
-  --dna-helix-density: 2;   /* 0.5 = squished, 1.0 = normal, 2.0 = stretched */
-  --dna-rung-spacing: 3.5;      /* Lower = more rungs, higher = fewer rungs (try 2, 3, 4, 5) */
+  --dna-helix-density: 1.5;
+  --dna-rung-spacing: 3;
+  
+  /* Floating Items Spacing - how close together they are */
+  --dna-item-spacing: 0.3;
+}
+
+/* Popup Overlay */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Popup Content */
+.popup-content {
+  background: white;
+  border-radius: 20px;
+  padding: 40px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 85vh;
+  overflow-y: auto;
+  position: relative;
+  animation: slideUp 0.4s ease;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Close Button */
+.popup-close {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: #f1f1f1;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 28px;
+  line-height: 1;
+  cursor: pointer;
+  transition: all 0.2s;
+  color: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.popup-close:hover {
+  background: #e0e0e0;
+  transform: rotate(90deg);
+}
+
+/* Popup Image */
+.popup-image {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  margin-bottom: 25px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Popup Title */
+.popup-title {
+  font-size: 28px;
+  font-weight: 600;
+  margin: 0 0 15px 0;
+  color: #222;
+}
+
+/* Popup Description */
+.popup-description {
+  font-size: 16px;
+  line-height: 1.7;
+  color: #555;
+  margin: 0;
 }

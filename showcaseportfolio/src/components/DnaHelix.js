@@ -1,15 +1,48 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import "../styling/DnaHelix.css";
+
+// Sample data - replace with your own images and content
+const FLOATING_ITEMS = [
+  {
+    id: 1,
+    image: "https://picsum.photos/400/400?random=1",
+    title: "Project Alpha",
+    description: "A revolutionary approach to DNA sequencing that combines machine learning with traditional methods."
+  },
+  {
+    id: 2,
+    image: "https://picsum.photos/400/400?random=2",
+    title: "Research Beta",
+    description: "Exploring the mysteries of genetic expression through advanced computational analysis."
+  },
+  {
+    id: 3,
+    image: "https://picsum.photos/400/400?random=3",
+    title: "Innovation Gamma",
+    description: "Breakthrough discoveries in cellular regeneration and tissue engineering."
+  },
+  {
+    id: 4,
+    image: "https://picsum.photos/400/400?random=4",
+    title: "Study Delta",
+    description: "Comprehensive analysis of protein folding patterns and their biological implications."
+  }
+];
 
 export default function DnaHelix({ scrollRef }) {
   const cameraRef = useRef(null);
   const dnaGroupRef = useRef(null);
   const containerRef = useRef(null);
+  const floatingItemsRef = useRef([]);
+  const raycasterRef = useRef(new THREE.Raycaster());
+  const mouseRef = useRef(new THREE.Vector2());
   const isScrollLocked = useRef(false);
   const lastScrollY = useRef(0);
   const rotationVelocity = useRef(0);
   const animationIdRef = useRef(null);
+  
+  const [selectedItem, setSelectedItem] = useState(null);
   
   useEffect(() => {
     // Reset refs on mount
@@ -33,8 +66,12 @@ export default function DnaHelix({ scrollRef }) {
     };
     
     // Get density settings from CSS
-    const helixDensity = parseFloat(styles.getPropertyValue('--dna-helix-density').trim()) || 1.0;
-    const rungSpacing = parseInt(styles.getPropertyValue('--dna-rung-spacing').trim()) || 3;
+    const helixDensity = parseFloat(styles.getPropertyValue('--dna-helix-density').trim());
+    const rungSpacing = parseInt(styles.getPropertyValue('--dna-rung-spacing').trim());
+    
+    // Apply defaults if NaN
+    const actualHelixDensity = isNaN(helixDensity) ? 1.0 : helixDensity;
+    const actualRungSpacing = isNaN(rungSpacing) ? 3 : rungSpacing;
 
     const camera = new THREE.PerspectiveCamera(
       75,
@@ -77,7 +114,7 @@ export default function DnaHelix({ scrollRef }) {
     dnaGroupRef.current = dnaGroup;
 
     const helixRadius = 1;
-    const helixHeight = 20 * helixDensity; // Adjust height based on density
+    const helixHeight = 20 * actualHelixDensity;
     const turns = 10;
     const pointsPerTurn = 60;
 
@@ -125,7 +162,7 @@ export default function DnaHelix({ scrollRef }) {
 
     // --- Base pairs ---
     let rungColorToggle = false;
-    for (let i = 0; i < turns * pointsPerTurn; i += rungSpacing) {
+    for (let i = 0; i < turns * pointsPerTurn; i += actualRungSpacing) {
       const t = i / (turns * pointsPerTurn);
       const angle = t * turns * Math.PI * 2;
       const y = (t - 0.5) * helixHeight;
@@ -137,7 +174,6 @@ export default function DnaHelix({ scrollRef }) {
 
       const distance = Math.hypot(x2 - x1, z2 - z1);
 
-      // Alternate between two colors
       const rungColor = rungColorToggle ? DNA_COLORS.rungA : DNA_COLORS.rungB;
       rungColorToggle = !rungColorToggle;
 
@@ -154,22 +190,123 @@ export default function DnaHelix({ scrollRef }) {
       dnaGroup.add(rung);
     }
 
+    // --- Floating items (pizza-shaped cylinders) ---
+    const textureLoader = new THREE.TextureLoader();
+    floatingItemsRef.current = [];
+    
+    // Get spacing from CSS - how much of helix height to use for items
+    const itemSpacingFactor = parseFloat(styles.getPropertyValue('--dna-item-spacing').trim());
+    const actualItemSpacing = isNaN(itemSpacingFactor) ? 0.6 : itemSpacingFactor;
+    const totalItemHeight = helixHeight * actualItemSpacing;
+    const startY = -totalItemHeight / 2;
+
+    FLOATING_ITEMS.forEach((item, index) => {
+      const group = new THREE.Group();
+      
+      // Evenly distribute items vertically
+      const yPosition = startY + (index / (FLOATING_ITEMS.length - 1)) * totalItemHeight;
+      
+      // Position on left or right side from viewer's perspective
+      const offsetRadius = 2.5;
+      
+      // Camera is at (5, 0, 0) looking at origin
+      // From viewer's perspective: left = negative Z, right = positive Z
+      const side = index % 2 === 0 ? -1 : 1;
+      const x = 0; // Keep centered on X axis (toward/away from camera)
+      const z = offsetRadius * side; // Left/right from viewer
+      
+      group.position.set(x, yPosition, z);
+      
+      // Outer flat cylinder (pizza shape)
+      const outerCylinder = new THREE.Mesh(
+        new THREE.CylinderGeometry(0.6, 0.6, 0.1, 32),
+        new THREE.MeshStandardMaterial({ 
+          color: 0x6c5ce7,
+          metalness: 0.3,
+          roughness: 0.4
+        })
+      );
+      outerCylinder.rotation.x = Math.PI / 2;
+      outerCylinder.rotation.y = Math.PI / 2;
+      group.add(outerCylinder);
+      
+      // Inner cylinder with image
+      textureLoader.load(item.image, (texture) => {
+        const innerCylinder = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.45, 0.45, 0.12, 32),
+          new THREE.MeshStandardMaterial({ 
+            map: texture,
+            metalness: 0.1,
+            roughness: 0.6
+          })
+        );
+        innerCylinder.rotation.x = Math.PI / 2;
+        innerCylinder.rotation.y = Math.PI / 2;
+        group.add(innerCylinder);
+      });
+      
+      // Store item data
+      group.userData = { itemData: item };
+      
+      // Make it face the camera
+      group.lookAt(camera.position);
+      
+      floatingItemsRef.current.push(group);
+      scene.add(group);
+    });
+
     scene.add(dnaGroup);
 
     // --- Lighting ---
-    // Get lighting values from CSS
-    const ambientIntensity = parseFloat(styles.getPropertyValue('--dna-ambient-light').trim()) || 0.8;
-    const pointIntensity = parseFloat(styles.getPropertyValue('--dna-point-light').trim()) || 1.5;
+    const ambientIntensity = parseFloat(styles.getPropertyValue('--dna-ambient-light').trim());
+    const pointIntensity = parseFloat(styles.getPropertyValue('--dna-point-light').trim());
     
-    scene.add(new THREE.AmbientLight(0xffffff, ambientIntensity));
-    const light = new THREE.PointLight(0xffffff, pointIntensity);
+    const actualAmbientIntensity = isNaN(ambientIntensity) ? 0.8 : ambientIntensity;
+    const actualPointIntensity = isNaN(pointIntensity) ? 1.5 : pointIntensity;
+    
+    scene.add(new THREE.AmbientLight(0xffffff, actualAmbientIntensity));
+    const light = new THREE.PointLight(0xffffff, actualPointIntensity);
     light.position.set(10, 10, 10);
     scene.add(light);
     
-    // Additional fill light for better visibility
     const fillLight = new THREE.PointLight(0xffffff, 0.8);
     fillLight.position.set(-10, -5, 10);
     scene.add(fillLight);
+
+    // --- Mouse interaction ---
+    const onMouseMove = (e) => {
+      mouseRef.current.x = (e.clientX / window.innerWidth) * 2 - 1;
+      mouseRef.current.y = -(e.clientY / window.innerHeight) * 2 + 1;
+      
+      raycasterRef.current.setFromCamera(mouseRef.current, camera);
+      const intersects = raycasterRef.current.intersectObjects(floatingItemsRef.current, true);
+      
+      // Update cursor
+      canvas.style.cursor = intersects.length > 0 ? 'pointer' : 'default';
+      
+      // Hover effect
+      floatingItemsRef.current.forEach(item => {
+        item.scale.setScalar(1);
+      });
+      
+      if (intersects.length > 0) {
+        const hoveredGroup = intersects[0].object.parent;
+        hoveredGroup.scale.setScalar(1.1);
+      }
+    };
+    
+    const onClick = () => {
+      raycasterRef.current.setFromCamera(mouseRef.current, camera);
+      const intersects = raycasterRef.current.intersectObjects(floatingItemsRef.current, true);
+      
+      if (intersects.length > 0) {
+        const clickedGroup = intersects[0].object.parent;
+        setSelectedItem(clickedGroup.userData.itemData);
+      }
+    };
+    
+    window.addEventListener('mousemove', onMouseMove);
+    canvas.addEventListener('click', onClick);
 
     // --- Scroll interaction ---
     const onScroll = () => {
@@ -178,13 +315,15 @@ export default function DnaHelix({ scrollRef }) {
       const rect = scrollRef.current.getBoundingClientRect();
       const viewportHeight = window.innerHeight;
 
+      // Reversed: 0 at top, 1 at bottom
       const progress = THREE.MathUtils.clamp(
-        1 - rect.bottom / (rect.height + viewportHeight),
+        rect.bottom / (rect.height + viewportHeight),
         0,
         1
       );
 
-      cameraRef.current.position.y = (progress - 0.5) * helixHeight;
+      // Start at top of helix, move down as we scroll
+      cameraRef.current.position.y = (0.5 - progress) * helixHeight;
 
       const delta = window.scrollY - lastScrollY.current;
       rotationVelocity.current = THREE.MathUtils.clamp(
@@ -196,9 +335,7 @@ export default function DnaHelix({ scrollRef }) {
       lastScrollY.current = window.scrollY;
     };
     
-    // Initialize camera position on mount
     onScroll();
-    
     window.addEventListener("scroll", onScroll, { passive: true });
 
     // --- Animation loop ---
@@ -209,6 +346,11 @@ export default function DnaHelix({ scrollRef }) {
         dnaGroupRef.current.rotation.y += rotationVelocity.current;
         rotationVelocity.current *= 0.9;
       }
+      
+      // Make floating items always face camera
+      floatingItemsRef.current.forEach(item => {
+        item.lookAt(camera.position);
+      });
 
       renderer.render(scene, cameraRef.current);
     };
@@ -241,8 +383,9 @@ export default function DnaHelix({ scrollRef }) {
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onResize);
       window.removeEventListener("wheel", onWheel);
+      window.removeEventListener('mousemove', onMouseMove);
+      canvas.removeEventListener('click', onClick);
       
-      // Dispose Three.js resources
       scene.traverse((object) => {
         if (object.geometry) object.geometry.dispose();
         if (object.material) {
@@ -255,14 +398,45 @@ export default function DnaHelix({ scrollRef }) {
       });
       renderer.dispose();
       
-      // Clear container
       if (container) {
         container.innerHTML = '';
       }
     };
   }, [scrollRef]);
+  
+  // Disable scrolling when popup is open
+  useEffect(() => {
+    if (selectedItem) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [selectedItem]);
 
   return (
-    <div ref={containerRef} className="dna-canvas" />
+    <>
+      <div ref={containerRef} className="dna-canvas" />
+      
+      {selectedItem && (
+        <div className="popup-overlay" onClick={() => setSelectedItem(null)}>
+          <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+            <button className="popup-close" onClick={() => setSelectedItem(null)}>
+              ×
+            </button>
+            <img 
+              src={selectedItem.image} 
+              alt={selectedItem.title}
+              className="popup-image"
+            />
+            <h2 className="popup-title">{selectedItem.title}</h2>
+            <p className="popup-description">{selectedItem.description}</p>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
