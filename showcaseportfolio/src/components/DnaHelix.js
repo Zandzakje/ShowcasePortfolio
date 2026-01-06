@@ -1,32 +1,36 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import "../styling/DnaHelix.css";
+import dna1 from "../assets/DNA_1.png";
+import dna2 from "../assets/DNA_2.png";
+import dna3 from "../assets/DNA_3.png";
+import dna4 from "../assets/DNA_4.png";
 
 // Sample data - replace with your own images and content
 const FLOATING_ITEMS = [
   {
     id: 1,
-    image: "https://github.com/Zandzakje/ShowcasePortfolio/tree/main/showcaseportfolio/src/assets/DNA_1.png",
-    title: "Project Alpha",
-    description: "A revolutionary approach to DNA sequencing that combines machine learning with traditional methods."
+    image: dna1,
+    title: "Carpet - Starry night",
+    description: "A design that I've made during my time in Game Design & Technology semester from Fontys, 2025."
   },
   {
     id: 2,
-    image: "https://picsum.photos/400/400?random=2",
-    title: "Research Beta",
-    description: "Exploring the mysteries of genetic expression through advanced computational analysis."
+    image: dna2,
+    title: "Welcome mat - Magical welcome",
+    description: "A design that I've made during my time in Game Design & Technology semester from Fontys, 2025."
   },
   {
     id: 3,
-    image: "https://picsum.photos/400/400?random=3",
-    title: "Innovation Gamma",
-    description: "Breakthrough discoveries in cellular regeneration and tissue engineering."
+    image: dna3,
+    title: "Carpet - Piercing eye",
+    description: "A design that I've made during my time in Game Design & Technology semester from Fontys, 2025."
   },
   {
     id: 4,
-    image: "https://picsum.photos/400/400?random=4",
-    title: "Study Delta",
-    description: "Comprehensive analysis of protein folding patterns and their biological implications."
+    image: dna4,
+    title: "Karma system progress bar",
+    description: "A design that I've made during my time in Game Design & Technology semester from Fontys, 2025."
   }
 ];
 
