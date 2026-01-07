@@ -239,6 +239,8 @@ export default function DnaHelix({ scrollRef }) {
       
       // Inner cylinder with image
       textureLoader.load(item.image, (texture) => {
+        texture.colorSpace = THREE.SRGBColorSpace;
+
         const innerCylinder = new THREE.Mesh(
           new THREE.CylinderGeometry(0.45, 0.45, 0.12, 32),
           new THREE.MeshStandardMaterial({ 
