@@ -6,7 +6,6 @@ import dna2 from "../assets/DNA_2.png";
 import dna3 from "../assets/DNA_3.png";
 import dna4 from "../assets/DNA_4.png";
 
-// Sample data - replace with your own images and content
 const FLOATING_ITEMS = [
   {
     id: 1,

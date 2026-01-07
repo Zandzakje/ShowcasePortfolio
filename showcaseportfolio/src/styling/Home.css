@@ -15,8 +15,14 @@ body {
 
 .content-box {
   background: rgba(84, 54, 148, 0.45);
-  padding: 30px 40px;
+  padding: 4px;
   text-align: center;
   border-radius: 14px;
   max-width: 450px;
+}
+
+.inner-box {
+  background: rgba(255, 255, 255, 0.15);
+  padding: 25px;
+  border-radius: 10px;
 }

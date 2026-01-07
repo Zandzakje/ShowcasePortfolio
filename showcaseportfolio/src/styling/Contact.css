@@ -1,0 +1,73 @@
+body {
+  background: url("../assets/TestBg.jpg") no-repeat center/cover fixed;
+  margin: 0;
+  font-family: sans-serif;
+  color: white;
+}
+
+.content-wrapper {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-top: 100px;
+}
+
+.content-box {
+  background: rgba(84, 54, 148, 0.45);
+  padding: 4px;
+  border-radius: 14px;
+  max-width: 450px;
+}
+
+.inner-box {
+  background: rgba(255, 255, 255, 0.15);
+  padding: 30px 40px;
+  border-radius: 10px;
+}
+
+.contact-container {
+  display: flex;
+  gap: 30px;
+  align-items: center;
+}
+
+.contact-icons {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  color: white;
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1;
+  color: white;
+}
+
+.contact-info > div {
+  display: flex;
+  align-items: center;
+  min-height: 24px;
+}
+
+.cv-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.cv-button {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.cv-button:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
