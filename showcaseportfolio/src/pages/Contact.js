@@ -5,13 +5,13 @@ import "../styling/Contact.css";
 
 export default function Contact() {
   const handlePreviewCV = () => {
-    window.open("../assets/CV.pdf", "_blank");
+    window.open("https://www.canva.com/design/DAFDSAKoXik/-mmgN0NcDqOKzfqahvT3Cw/view?utm_content=DAFDSAKoXik&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=hf2ddd5a8b9", "_blank");
   };
 
   const handleDownloadCV = () => {
     const link = document.createElement("a");
-    link.href = "../assets/CV.pdf";
-    link.download = "../assets/CV.pdf";
+    link.href = "https://github.com/Zandzakje/ShowcasePortfolio/blob/main/showcaseportfolio/src/assets/CV.pdf";
+    link.download = "cv.pdf";
     link.click();
   };
 
