@@ -93,6 +93,10 @@ export default function DnaHelix({ scrollRef }) {
     renderer.setSize(window.innerWidth, window.innerHeight);
     renderer.setPixelRatio(window.devicePixelRatio);
 
+    renderer.outputColorSpace = THREE.SRGBColorSpace;
+    renderer.toneMapping = THREE.ACESFilmicToneMapping;
+    renderer.toneMappingExposure = 1.0;
+
     // Clear any existing canvas before appending
     if (container) {
       container.innerHTML = '';

@@ -32,7 +32,7 @@ export default function Contact() {
               <div className="contact-info">
                 <div>damiantomasila@hotmail.com</div>
                 <div>+31 6 34560197</div>
-                <div>linkedin.com/in/yourprofile</div>
+                <div>https://www.linkedin.com/in/damian-tomasila-9441591b1/</div>
                 <div className="cv-buttons">
                   <button onClick={handlePreviewCV} className="cv-button">
                     Preview
